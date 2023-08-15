@@ -67,6 +67,8 @@ public class World
         map = loader.load("1bit/blackAndWhiteWorld.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1);
 
+
+
         //sprite batch creation
         spriteBatch = new SpriteBatch();
 
@@ -86,11 +88,11 @@ public class World
         player.setSCALE(SCALE);
 
         // Enemy creation
-        enemy = new Enemy(player.getPosition().x + 300, player.getPosition().y);
-        enemy.setSCALE(SCALE);
+        //enemy = new Enemy(player.getPosition().x + 300, player.getPosition().y);
+        //enemy.setSCALE(SCALE);
 
         //NPC creation
-        nonPlayableCharacter = new NonPlayableCharacter(300 , 300);
+        nonPlayableCharacter = new NonPlayableCharacter(820 , 600);
 
         // Debug
         debugRenderer = new ShapeRenderer();

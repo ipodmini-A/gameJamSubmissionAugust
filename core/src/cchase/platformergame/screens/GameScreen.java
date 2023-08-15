@@ -6,6 +6,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
@@ -22,7 +24,9 @@ public class GameScreen extends ScreenAdapter
     float x = 632f; // Spawn point
     float y = 806f;
     private boolean firstSpawnCheck = false;
-
+    Texture darkOverlayTexture;
+    Pixmap darkPixmap;
+    float brightness = 0.7f;
 
     /**
      * Constructor to GameScreen. Accepts a PlatformerGame and assigns game, while creating a new SpriteBatch,
@@ -37,6 +41,11 @@ public class GameScreen extends ScreenAdapter
         player = new Player(x,y);
         //Gdx.input.setInputProcessor(inputProcessor);
         world = new World(player);
+        darkPixmap = new Pixmap(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), Pixmap.Format.RGBA8888);
+        darkPixmap.setColor(0, 0, 0, 1f); // Adjust the alpha value to control the darkness
+        darkPixmap.fillRectangle(0, 0, darkPixmap.getWidth(), darkPixmap.getHeight());
+        darkOverlayTexture = new Texture(darkPixmap);
+        darkPixmap.dispose();
     }
 
     @Override
@@ -84,6 +93,16 @@ public class GameScreen extends ScreenAdapter
         Gdx.gl.glClearColor(0.0f, 0.1f, 0.2f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        batch.begin();
+
+        // Render your game elements here
+
+        batch.draw(darkOverlayTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        darkPixmap.setColor(0, 0, 0, brightness); // Adjust alpha value as needed
+
+        batch.end();
+
         world.WorldUpdate(player); // Removing this results in a null crash. idk
         world.render(delta);
         /*
@@ -106,24 +125,16 @@ public class GameScreen extends ScreenAdapter
             GameState.lastRecordedPlayerY = player.getPosition().y;
             System.out.println(GameState.lastRecordedPlayerY);
             world.music.pause();
-            game.setScreen(new BattleScreen(game,player,world.enemy));
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.I))
-        {
-            GameState.gameScreen = game.getScreen();
-            player.setDisableControls(true);
-            GameState.lastRecordedPlayerX = player.getPosition().x;
-            System.out.println(GameState.lastRecordedPlayerX);
-            GameState.lastRecordedPlayerY = player.getPosition().y;
-            System.out.println(GameState.lastRecordedPlayerY);
-            world.music.pause();
-            game.setScreen(new BattleScreen(game,player,world.enemy));
         }
 
         if (player.getHealth() <= 0)
         {
             game.setScreen(new EndScreen(game));
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.I))
+        {
+            // idk
         }
 
         //System.out.println(player.isTouchingWall());
@@ -136,5 +147,6 @@ public class GameScreen extends ScreenAdapter
         batch.dispose();
         player.dispose();
         world.dispose();
+        darkOverlayTexture.dispose();
     }
 }
