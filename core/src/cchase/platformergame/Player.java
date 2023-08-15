@@ -63,6 +63,7 @@ public class Player
     private boolean displayMessage;
     private boolean nextMessage;
     private boolean npcInteraction;
+    private boolean touchingObject;
 
     enum State
     {
@@ -944,6 +945,16 @@ public class Player
     public void setStatus(Status status)
     {
         this.status = status;
+    }
+
+    public boolean isTouchingObject()
+    {
+        return touchingObject;
+    }
+
+    public void setTouchingObject(boolean touchingObject)
+    {
+        this.touchingObject = touchingObject;
     }
 
     public void dispose()

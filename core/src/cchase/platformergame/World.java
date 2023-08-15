@@ -40,6 +40,7 @@ public class World
     private final OrthographicCamera camera;
     protected Player player;
     public Enemy enemy;
+    public CollectableObject testObject;
     public  NonPlayableCharacter nonPlayableCharacter;
     private final TiledMap map;
     private TmxMapLoader loader;
@@ -90,6 +91,9 @@ public class World
         // Enemy creation
         //enemy = new Enemy(player.getPosition().x + 300, player.getPosition().y);
         //enemy.setSCALE(SCALE);
+
+        // Object creation
+        testObject = new CollectableObject(550,750);
 
         //NPC creation
         nonPlayableCharacter = new NonPlayableCharacter(820 , 600);
@@ -493,6 +497,19 @@ public class World
         return false;
     }
 
+    public boolean isCollidingWithCollectableObject()
+    {
+        if (player.getBounds().overlaps(testObject.getBounds()))
+        {
+            testObject.setTouchingPlayer(true);
+            player.setTouchingObject(true);
+            return true;
+        }
+        testObject.setTouchingPlayer(false);
+        player.setTouchingObject(false);
+        return false;
+    }
+
 
     /**
      * Map renderer
@@ -526,6 +543,11 @@ public class World
             nonPlayableCharacter.Message(player);
         }
 
+        if (isCollidingWithCollectableObject())
+        {
+            testObject.setObjectCollected(true);
+        }
+
         try
         {
             // Enemy render
@@ -542,6 +564,12 @@ public class World
         } catch (Exception e)
         {
             // Handle error
+        }
+
+        //Object render
+        if (!testObject.objectCollected)
+        {
+            testObject.render(spriteBatch, delta, camera);
         }
 
 

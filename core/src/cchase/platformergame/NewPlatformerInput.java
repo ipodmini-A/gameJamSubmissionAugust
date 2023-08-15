@@ -92,6 +92,11 @@ public class NewPlatformerInput implements InputProcessor
                 {
                     p.setLookingDown(true);
                 }
+
+                if (p.isTouchingObject())
+                {
+
+                }
                 break;
             case Input.Keys.X:
                 System.out.println("Dash");
